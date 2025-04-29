@@ -2,7 +2,7 @@ import React from 'react'
 import dayjs from "dayjs";
 import Image from 'next/image';
 import { getRandomInterviewCover } from '@/lib/utils';
-// import DisplayTechIcons from "./DisplayTechIcons";
+import DisplayTechIcons from "./DisplayTechIcons";
 import { Button } from "./ui/button";
 import Link from "next/link";
 
@@ -53,6 +53,7 @@ const InterviewCard = ({
                 width={22}
                 height={22}
                 alt="calendar"
+
               />
               <p>{formattedDate}</p>
             </div>
@@ -72,7 +73,7 @@ const InterviewCard = ({
         </div>
 
         <div className="flex flex-row justify-between">
-          {/* <DisplayTechIcons techStack={techstack} /> */}
+          <DisplayTechIcons techStack={techstack} />
 
           <Button className="btn-primary">
             <Link
