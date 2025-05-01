@@ -1,24 +1,24 @@
-"use client"
+"use client";
 
-import { z } from "zod"
+import { z } from "zod";
 import Link from "next/link";
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { Button } from "@/components/ui/button"
-
-import {
-  Form
-
-} from "@/components/ui/form"
-
-import { Input } from "@/components/ui/input"
 import Image from "next/image";
 import { toast } from "sonner";
-import { cn } from "@/lib/utils";
-import FormField from "./FormField";
+import { auth } from "@/firebase/client";
+import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
+import { zodResolver } from "@hookform/resolvers/zod";
 
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 
+import { Form } from "@/components/ui/form";
+import { Button } from "@/components/ui/button";
+
+import { signIn, signUp } from "@/lib/actions/auth.action";
+import FormField from "./FormField";
 
 const authFormSchema = (type: FormType) => {
   return z.object({
@@ -29,36 +29,17 @@ const authFormSchema = (type: FormType) => {
 };
 
 const AuthForm = ({ type }: { type: FormType }) => {
-  const router = useRouter
-  const formSchema = authFormSchema(type);
+  const router = useRouter();
 
-  // 1. Define your form.
+  const formSchema = authFormSchema(type);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
       email: "",
       password: "",
-
     },
-  })
-
-  // 2. Define a submit handler.
-  // function onSubmit(values: z.infer<typeof formSchema>) {
-  //   try {
-  //     if (type === "sign-up") {
-  //       console.log("Sign-up", value);
-  //     }
-
-  //     else {
-  //       console.log("Sign In", values);
-  //     }
-  //   }
-  //   catch (error) {
-  //     console.log(error);
-  //     toast.error(`There was an error: ${error}`);
-  //   }
-  // }
+  });
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
@@ -115,16 +96,16 @@ const AuthForm = ({ type }: { type: FormType }) => {
   };
 
   const isSignIn = type === "sign-in";
+
   return (
-    <div className="_card-border lg:min-w-[566px] ">
+    <div className="card-border lg:min-w-[566px]">
       <div className="flex flex-col gap-6 card py-14 px-10">
         <div className="flex flex-row gap-2 justify-center">
           <Image src="/logo.svg" alt="logo" height={32} width={38} />
-          <h2 className="text-primary-100">Interview - Genie</h2>
+          <h2 className="text-primary-100">PrepWise</h2>
         </div>
 
         <h3>Practice job interviews with AI</h3>
-
 
         <Form {...form}>
           <form
@@ -134,7 +115,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
             {!isSignIn && (
               <FormField
                 control={form.control}
-                name="Name"
+                name="name"
                 label="Name"
                 placeholder="Your Name"
                 type="text"
@@ -172,11 +153,9 @@ const AuthForm = ({ type }: { type: FormType }) => {
             {!isSignIn ? "Sign In" : "Sign Up"}
           </Link>
         </p>
+      </div>
+    </div>
+  );
+};
 
-      </div >
-    </div >
-
-  )
-}
-
-export default AuthForm
+export default AuthForm;
