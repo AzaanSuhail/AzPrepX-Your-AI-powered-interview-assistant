@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useState, useEffect } from "react";
-
+import { useRouter } from "next/navigation";
 
 import { cn } from "@/lib/utils";
 import { vapi } from "@/lib/vapi.sdk";
@@ -148,14 +148,20 @@ const Agent = ({
     return (
         <>
             <div className="call-view">
-                <h3>Interview generation</h3>
-
-                <Agent
-                    userName={user?.name!}
-                    userId={user?.id}
-                    profileImage={user?.profileURL}
-                    type="generate"
-                />
+                {/* AI Interviewer Card */}
+                <div className="card-interviewer">
+                    <div className="avatar">
+                        <Image
+                            src="/ai-avatar.png"
+                            alt="profile-image"
+                            width={65}
+                            height={54}
+                            className="object-cover"
+                        />
+                        {isSpeaking && <span className="animate-speak" />}
+                    </div>
+                    <h3>AI Interviewer</h3>
+                </div>
 
                 {/* User Profile Card */}
                 <div className="card-border">
@@ -172,14 +178,27 @@ const Agent = ({
                 </div>
             </div>
 
-            -
+            {messages.length > 0 && (
+                <div className="transcript-border">
+                    <div className="transcript">
+                        <p
+                            key={lastMessage}
+                            className={cn(
+                                "transition-opacity duration-500 opacity-0",
+                                "animate-fadeIn opacity-100"
+                            )}
+                        >
+                            {lastMessage}
+                        </p>
+                    </div>
+                </div>
+            )}
 
             <div className="w-full flex justify-center">
                 {callStatus !== "ACTIVE" ? (
                     <button className="relative btn-call" onClick={() => handleCall()}>
                         <span
                             className={cn(
-
                                 "absolute animate-ping rounded-full opacity-75",
                                 callStatus !== "CONNECTING" && "hidden"
                             )}
